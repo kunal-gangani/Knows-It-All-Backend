@@ -33,7 +33,7 @@ public class AuthService {
                 .name(name)
                 .email(email)
                 .password(passwordEncoder.encode(password))
-                .skillTokenBalance(100L)  // starting balance
+                .skillTokenBalance(100L) // starting balance
                 .trustScore(0.0f)
                 .profileVerified(false)
                 .isOnline(true)
