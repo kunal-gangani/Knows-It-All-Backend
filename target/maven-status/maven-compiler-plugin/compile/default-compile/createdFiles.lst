@@ -30,6 +30,7 @@ com\example\knowitall_backend\model\TrustLedger$LedgerStatus.class
 com\example\knowitall_backend\model\TrustLedger.class
 com\example\knowitall_backend\model\Skill$SkillCategory.class
 com\example\knowitall_backend\config\SecurityConfig.class
+com\example\knowitall_backend\config\JwtProperties.class
 com\example\knowitall_backend\model\Skill$SkillBuilder.class
 com\example\knowitall_backend\dto\LoginRequest.class
 com\example\knowitall_backend\repository\UserRepository.class
