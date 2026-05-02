@@ -1,21 +1,34 @@
 package com.example.knowitall_backend.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.knowitall_backend.model.Skill;
 import com.example.knowitall_backend.model.User;
 import com.example.knowitall_backend.repository.SkillRepository;
 import com.example.knowitall_backend.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/skills")
+@RequestMapping("/ledger")
 @RequiredArgsConstructor
-public class SkillController {
+public class LedgerController {
 
     private final SkillRepository skillRepository;
     private final UserRepository userRepository;
