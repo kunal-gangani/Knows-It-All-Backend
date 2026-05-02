@@ -35,6 +35,7 @@ public class LedgerController {
 
     // POST /skills
     @PostMapping
+    @SuppressWarnings("null")
     public ResponseEntity<?> addSkill(
             @RequestBody Map<String, Object> body,
             Authentication auth) {
@@ -67,6 +68,7 @@ public class LedgerController {
 
     // GET /skills/user/{userId}
     @GetMapping("/user/{userId}")
+    @SuppressWarnings("null")
     public ResponseEntity<?> getUserSkills(@PathVariable String userId) {
         try {
             List<Map<String, Object>> skills = skillRepository
@@ -82,6 +84,7 @@ public class LedgerController {
 
     // GET /skills/search?query=&category=
     @GetMapping("/search")
+    @SuppressWarnings("null")
     public ResponseEntity<?> searchSkills(
             @RequestParam String query,
             @RequestParam(required = false) String category) {
@@ -99,6 +102,7 @@ public class LedgerController {
 
     // PUT /skills/{skillId}
     @PutMapping("/{skillId}")
+    @SuppressWarnings("null")
     public ResponseEntity<?> updateSkill(
             @PathVariable String skillId,
             @RequestBody Map<String, Object> body,
@@ -133,6 +137,7 @@ public class LedgerController {
 
     // DELETE /skills/{skillId}
     @DeleteMapping("/{skillId}")
+    @SuppressWarnings("null")
     public ResponseEntity<?> deleteSkill(
             @PathVariable String skillId,
             Authentication auth) {
@@ -155,6 +160,7 @@ public class LedgerController {
 
     // POST /skills/{skillId}/endorse
     @PostMapping("/{skillId}/endorse")
+    @SuppressWarnings("null")
     public ResponseEntity<?> endorseSkill(
             @PathVariable String skillId,
             Authentication auth) {

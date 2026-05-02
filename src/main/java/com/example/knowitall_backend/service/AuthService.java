@@ -1,15 +1,17 @@
 package com.example.knowitall_backend.service;
 
-import com.example.knowitall_backend.model.User;
-import com.example.knowitall_backend.repository.UserRepository;
-import com.example.knowitall_backend.security.JwtUtil;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.example.knowitall_backend.model.User;
+import com.example.knowitall_backend.repository.UserRepository;
+import com.example.knowitall_backend.security.JwtUtil;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +23,7 @@ public class AuthService {
 
     // ── Register ──────────────────────────────────────────────────────────────
 
+    @SuppressWarnings("null")
     public Map<String, Object> register(String name, String email, String password) {
         // Check if email already exists
         if (userRepository.existsByEmail(email)) {
@@ -55,6 +58,7 @@ public class AuthService {
 
     // ── Login ─────────────────────────────────────────────────────────────────
 
+    @SuppressWarnings("null")
     public Map<String, Object> login(String email, String password) {
         // Find user by email
         User user = userRepository.findByEmail(email)

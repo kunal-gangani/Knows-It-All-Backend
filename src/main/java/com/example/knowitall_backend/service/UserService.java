@@ -21,6 +21,7 @@ public class UserService {
     /**
      * Get user profile information
      */
+    @SuppressWarnings("null")
     public Map<String, Object> getUserProfile(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -31,6 +32,7 @@ public class UserService {
     /**
      * Update user profile (name and email)
      */
+    @SuppressWarnings("null")
     public Map<String, Object> updateProfile(String userId, String name, String email) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -52,6 +54,7 @@ public class UserService {
     /**
      * Update user location (latitude and longitude)
      */
+    @SuppressWarnings("null")
     public void updateLocation(String userId, Double latitude, Double longitude) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -65,6 +68,7 @@ public class UserService {
     /**
      * Get nearby users within a specified radius
      */
+    @SuppressWarnings("null")
     public List<Map<String, Object>> getNearbyUsers(String requestingUserId,
             Double latitude,
             Double longitude,
@@ -91,6 +95,7 @@ public class UserService {
     /**
      * Logout user (set online status to false)
      */
+    @SuppressWarnings("null")
     public void logout(String userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
