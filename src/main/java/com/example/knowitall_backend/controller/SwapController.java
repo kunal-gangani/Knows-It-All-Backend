@@ -1,5 +1,6 @@
 package com.example.knowitall_backend.controller;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import com.example.knowitall_backend.repository.LedgerRepository;
 import com.example.knowitall_backend.repository.SkillRepository;
 import com.example.knowitall_backend.repository.SwapRepository;
 import com.example.knowitall_backend.repository.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -125,6 +127,7 @@ public class SwapController {
 
     // PUT /swap/{swapId}/complete
     @PutMapping("/{swapId}/complete")
+    @Transactional
     public ResponseEntity<?> completeSwap(
             @PathVariable String swapId,
             Authentication auth) {
@@ -315,7 +318,7 @@ public class SwapController {
             for (byte b : hash)
                 hex.append(String.format("%02x", b));
             return hex.toString();
-        } catch (Exception e) {
+        } catch (NoSuchAlgorithmException e) {
             return UUID.randomUUID().toString();
         }
     }
