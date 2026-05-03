@@ -7,8 +7,9 @@ import java.util.function.Function;
 
 import javax.crypto.SecretKey;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.example.knowitall_backend.config.JwtProperties; // Import your properties
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -18,11 +19,13 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil {
 
-    @Value("${jwt.secret}")
-    private String secretKey;
+    // 1. Declare as final and use the Properties class
+    private final JwtProperties jwtProperties;
 
-    @Value("${jwt.expiration}")
-    private long jwtExpiration;
+    // 2. Inject via Constructor
+    public JwtUtil(JwtProperties jwtProperties) {
+        this.jwtProperties = jwtProperties;
+    }
 
     // ── Token generation ──────────────────────────────────────────────────────
 
@@ -35,16 +38,15 @@ public class JwtUtil {
 
     private String buildToken(Map<String, Object> extraClaims, String subject) {
         var now = new Date();
-        var expiration = new Date(now.getTime() + jwtExpiration);
+        // 3. Use jwtProperties.getExpiration()
+        var expiration = new Date(now.getTime() + jwtProperties.getExpiration());
 
         var builder = Jwts.builder();
 
-        // Add extra claims
         for (Map.Entry<String, Object> entry : extraClaims.entrySet()) {
             builder = builder.claim(entry.getKey(), entry.getValue());
         }
 
-        // Add standard claims and sign
         return builder
                 .subject(subject)
                 .issuedAt(now)
@@ -70,10 +72,6 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String extractEmail(String token) {
-        return extractAllClaims(token).get("email", String.class);
-    }
-
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
@@ -92,7 +90,8 @@ public class JwtUtil {
     }
 
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
+        // 4. Use jwtProperties.getSecret()
+        byte[] keyBytes = Decoders.BASE64.decode(jwtProperties.getSecret());
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
