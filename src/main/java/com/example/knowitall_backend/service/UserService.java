@@ -1,6 +1,5 @@
 package com.example.knowitall_backend.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,28 +67,27 @@ public class UserService {
     /**
      * Get nearby users within a specified radius
      */
-    @SuppressWarnings("null")
+
     public List<Map<String, Object>> getNearbyUsers(String requestingUserId,
             Double latitude,
             Double longitude,
             Double radiusKm) {
-        // Convert radius in km to degrees (approximately 1 degree = 111 km)
-        Double degreeOffset = radiusKm / 111.0;
+        // 1 degree of latitude is always ~111.32 km
+        double latOffset = radiusKm / 111.32;
 
-        Double latMin = latitude - degreeOffset;
-        Double latMax = latitude + degreeOffset;
-        Double lonMin = longitude - degreeOffset;
-        Double lonMax = longitude + degreeOffset;
+        // 1 degree of longitude depends on the latitude: 111.32 * cos(latitude)
+        // Convert latitude to radians for the Math.cos function
+        double lonOffset = radiusKm / (111.32 * Math.cos(Math.toRadians(latitude)));
+
+        Double latMin = latitude - latOffset;
+        Double latMax = latitude + latOffset;
+        Double lonMin = longitude - lonOffset;
+        Double lonMax = longitude + lonOffset;
 
         List<User> users = userRepository.findUsersInBoundingBox(
                 latMin, latMax, lonMin, lonMax, requestingUserId);
 
-        List<Map<String, Object>> result = new ArrayList<>();
-        for (User user : users) {
-            result.add(userToProfileMap(user));
-        }
-
-        return result;
+        return users.stream().map(this::userToProfileMap).toList();
     }
 
     /**
