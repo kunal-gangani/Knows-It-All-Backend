@@ -14,7 +14,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -25,6 +27,13 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     @Override
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
+        String path = request.getServletPath();
+        // Skip filtering for auth endpoints to prevent unnecessary 403s
+        return path.startsWith("/api/v1/auth/");
+    }
+
+    @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
@@ -32,7 +41,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        // Skip filter if no Bearer token
+        // 1. If no Bearer token, just pass to the next filter (SecurityConfig takes
+        // over)
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -49,13 +59,16 @@ public class JwtFilter extends OncePerRequestFilter {
                             userId,
                             null,
                             new ArrayList<>());
-                    authToken.setDetails(
-                            new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
         } catch (Exception e) {
-            // Invalid token — just continue without authentication
+            // 2. Catch specific JWT issues (expired, malformed, invalid signature)
+            // We log the error but call doFilter so the chain doesn't hang.
+            // SecurityConfig will block the request if the route is protected.
+            log.error("JWT Validation failed: {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);
